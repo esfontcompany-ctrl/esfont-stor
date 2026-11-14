@@ -1,0 +1,58 @@
+ESFONT STORE — INTEGRAÇÃO PIX COM SERVIDOR NO RENDER
+
+O QUE FOI ALTERADO
+- O e-mail de acesso gratuito NÃO aparece mais no HTML do site.
+- A regra de acesso gratuito fica exclusivamente no servidor, na variável FREE_ACCESS_EMAIL.
+- O site chama o backend Render para criar Pix e consultar o status.
+- O backend cria cobranças de R$ 49,90 no Mercado Pago e ativa a loja somente após consultar um pagamento aprovado recebido por webhook.
+- O Supabase continua responsável pelo login e pelos dados das lojas.
+
+1) SUPABASE
+- Execute supabase/migration_store_payments.sql no SQL Editor do projeto Supabase.
+- Separe SUPABASE_URL, SUPABASE_ANON_KEY e SUPABASE_SERVICE_ROLE_KEY nas configurações do projeto.
+- A SERVICE_ROLE_KEY é secreta: coloque somente no Render, nunca no HTML ou em repositório público.
+
+2) CRIAR O SERVIÇO NO RENDER
+- No Render, crie um serviço Web a partir do repositório que contém esta pasta.
+- Root Directory: server
+- Runtime: Node
+- Build Command: npm install
+- Start Command: npm start
+- Health Check Path: /health
+- O render.yaml também pode ser usado como Blueprint.
+
+3) VARIÁVEIS DE AMBIENTE NO RENDER
+SUPABASE_URL = URL do projeto Supabase
+SUPABASE_ANON_KEY = chave publicável/anon do Supabase
+SUPABASE_SERVICE_ROLE_KEY = chave service_role secreta do Supabase
+MP_ACCESS_TOKEN = Access Token privado da aplicação Mercado Pago
+MP_WEBHOOK_SECRET = assinatura secreta de Webhooks do Mercado Pago
+FREE_ACCESS_EMAIL = endereço que terá acesso gratuito (defina o e-mail autorizado aqui, apenas no Render)
+SITE_URL = URL pública do site Netlify, por exemplo https://seusite.netlify.app
+
+Depois do primeiro deploy, copie a URL pública do serviço Render.
+
+4) LIGAR O SITE AO RENDER
+No arquivo index.html, procure:
+const ESFONT_API_URL = 'https://SEU-SERVICO.onrender.com';
+Substitua pelo endereço real do serviço Render e publique o index.html no Netlify.
+Não coloque tokens do Mercado Pago nem a service role key no index.html.
+
+5) WEBHOOK MERCADO PAGO
+No painel de desenvolvedores do Mercado Pago, configure notificações de pagamento (Payments) para:
+https://SEU-SERVICO.onrender.com/webhooks/mercadopago
+Copie a assinatura secreta gerada e coloque em MP_WEBHOOK_SECRET no Render.
+O servidor valida a assinatura, consulta o pagamento diretamente na API do Mercado Pago e só então ativa a loja.
+
+6) TESTE ANTES DE PRODUÇÃO
+- Use credenciais de teste do Mercado Pago primeiro.
+- Teste uma conta comum: deve permanecer pendente até pagamento aprovado.
+- Teste a conta gratuita autorizada: o servidor deve ativá-la sem cobrança.
+- Teste o webhook e confira os logs do Render.
+- Só depois troque para credenciais de produção.
+
+IMPORTANTE
+- Não envie Access Token, assinatura secreta ou service role key pelo chat.
+- Não publique essas chaves no GitHub.
+- O servidor não está implantado nem conectado às contas do usuário por este pacote. É necessário preencher as variáveis e fazer o deploy no Render.
+- A URL do Render ainda é um marcador no index.html e precisa ser substituída pela URL criada na sua conta.
