@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESFONT STORE — Sua loja online pronta</title>
+  <meta name="description" content="ESFONT STORE: crie e hospede sua loja online. Ative em minutos e venda com Mercado Pago." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --blue-200: #bfdbfe;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-700: #1d4ed8;
+      --blue-800: #1e40af;
+      --blue-900: #1e3a8a;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 10px 40px -10px rgba(37, 99, 235, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--slate-50);
+      color: var(--slate-800);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--blue-100);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: var(--blue-700);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+      color: white;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue-700);
+      border: 2px solid var(--blue-200);
+    }
+
+    .btn-outline:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-500);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--slate-600);
+      border: none;
+    }
+
+    .btn-ghost:hover { color: var(--blue-600); }
+
+    .btn-lg {
+      padding: 0.9rem 1.7rem;
+      font-size: 1.05rem;
+      border-radius: 12px;
+    }
+
+    .btn-block { width: 100%; }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .hero {
+      background: linear-gradient(160deg, var(--blue-50) 0%, var(--white) 45%, var(--blue-50) 100%);
+      padding: 4rem 1.5rem 4.5rem;
+      text-align: center;
+    }
+
+    .hero-content { max-width: 780px; margin: 0 auto; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.3rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--slate-900);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-800));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--slate-600);
+      max-width: 540px;
+      margin: 0 auto 1.8rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p { color: var(--slate-600); }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--blue-100);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--blue-300);
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--blue-50);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--slate-600);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .step {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--blue-100);
+      text-align: center;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+      color: white;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      margin: 0 auto 0.9rem;
+    }
+
+    .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .step p { font-size: 0.9rem; color: var(--slate-600); }
+
+    .pricing {
+      background: linear-gradient(180deg, var(--blue-800) 0%, var(--blue-900) 100%);
+      color: white;
+      border-radius: 18px;
+      padding: 2.5rem 1.75rem;
+      text-align: center;
+    }
+
+    .pricing h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .pricing p { opacity: 0.9; margin-bottom: 1.4rem; }
+    .price-tag { font-size: 2.6rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .price-tag span { font-size: 1rem; font-weight: 500; opacity: 0.85; }
+
+    .pricing .btn-primary {
+      background: white;
+      color: var(--blue-800);
+      box-shadow: none;
+    }
+
+    .pricing .btn-primary:hover { background: var(--blue-50); }
+
+    footer {
+      background: var(--slate-900);
+      color: var(--slate-100);
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer .logo { color: white; justify-content: center; margin-bottom: 0.6rem; }
+    footer p { font-size: 0.88rem; opacity: 0.7; }
+
+    .hidden { display: none !important; }
+
+    .auth-screen, .dashboard-screen {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+
+    .auth-card, .dash-card {
+      background: var(--white);
+      border: 1px solid var(--blue-100);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+    }
+
+    .auth-card h2, .dash-card h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 0.35rem;
+      text-align: center;
+    }
+
+    .auth-card .subtitle {
+      text-align: center;
+      color: var(--slate-600);
+      font-size: 0.95rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .form-group { margin-bottom: 1.1rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 0.35rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 1.5px solid var(--blue-100);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 1.3rem;
+      font-size: 0.92rem;
+      color: var(--slate-600);
+    }
+
+    .auth-switch button {
+      background: none;
+      border: none;
+      color: var(--blue-600);
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .auth-switch button:hover { text-decoration: underline; }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 1.1rem;
+      display: none;
+    }
+
+    .alert.show { display: block; }
+    .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .alert-success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .user-email {
+      font-size: 0.9rem;
+      color: var(--slate-600);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+
+    .store-box {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .store-box h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-top: 0.4rem;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .status-active {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 1.5rem 0.5rem;
+      color: var(--slate-600);
+    }
+
+    .empty-state p { margin-bottom: 1.2rem; }
+
+    @media (max-width: 640px) {
+      .nav-links .btn-outline { display: none; }
+      .hero { padding: 3rem 1.2rem 3.5rem; }
+    }
+
+    /* ESFONT STORE 3D visual identity */
+    :root{--blue-500:#3b9cff;--blue-600:#1768ed;--blue-700:#1249bd;--blue-800:#102e72;--blue-900:#07152f;--slate-900:#08152e;--radius:22px;--shadow:0 24px 70px rgba(20,75,180,.16)}
+    body{background:#f4f7ff;color:#101d39;overflow-x:hidden}
+    header{background:rgba(7,18,42,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(148,190,255,.16);box-shadow:0 8px 30px #06122a20}
+    .nav{max-width:1240px;padding: .85rem 1.5rem}
+    .logo{gap:.65rem;color:#fff;font-size:1.08rem;letter-spacing:.035em}
+    .brand-mark{width:45px;height:45px;display:block;filter:drop-shadow(0 8px 12px #1677ff55);transform:perspective(500px) rotateY(-12deg);transition:transform .4s}
+    .logo:hover .brand-mark{transform:perspective(500px) rotateY(12deg) rotateX(8deg) scale(1.08)}
+    .brand-mark svg{width:100%;height:100%;display:block}
+    .brand-word b{color:#70caff}
+    .btn{border-radius:13px;transition:transform .25s,box-shadow .25s,background .25s;letter-spacing:.005em}
+    .btn-primary{background:linear-gradient(135deg,#42b8ff,#1764ec 58%,#1644b7);box-shadow:0 12px 26px #1764ec42,inset 0 1px #ffffff66}
+    .btn-primary:hover{transform:translateY(-3px) scale(1.015);box-shadow:0 18px 35px #1764ec55}
+    .btn-outline{color:#dceaff;border-color:#628bd2;background:#ffffff09}
+    .btn-outline:hover{background:#ffffff18;border-color:#8bc7ff}
+    .hero{position:relative;isolation:isolate;overflow:hidden;min-height:660px;display:grid;place-items:center;text-align:center;padding:3.5rem 1.5rem 4rem;background:radial-gradient(ellipse at 50% 30%,#173e87 0%,#0b2453 42%,#06132c 100%);color:#fff}
+    .hero:before,.hero:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(2px);pointer-events:none}
+    .hero:before{width:580px;height:580px;left:-230px;top:-300px;background:radial-gradient(circle,#2678ff44,transparent 68%)}
+    .hero:after{width:700px;height:700px;right:-300px;bottom:-470px;background:radial-gradient(circle,#00c8ff30,transparent 68%)}
+    .hero-content{max-width:920px;position:relative;z-index:1}
+    .hero .badge{background:#8bcaff19;color:#bfe5ff;border:1px solid #8bcaff55;box-shadow:0 0 35px #239aff20;backdrop-filter:blur(10px)}
+    .hero h1{color:#fff;font-size:clamp(2.25rem,5.6vw,4.5rem);line-height:1.04;letter-spacing:-.055em;max-width:900px;margin:0 auto 1.1rem;text-shadow:0 8px 35px #0005}
+    .hero h1 span{background:linear-gradient(100deg,#fff 5%,#83d9ff 45%,#7da4ff 90%);-webkit-background-clip:text;background-clip:text}
+    .hero p{color:#c5d8f7;font-size:clamp(1rem,2vw,1.15rem);max-width:620px}
+    .hero-actions{gap:1rem}.hero-actions .btn{min-width:178px}
+    .hero-orbit{height:230px;max-width:600px;margin:0 auto 1rem;position:relative;display:grid;place-items:center;perspective:900px}
+    .orbit-ring{position:absolute;border:1px solid #75c9ff3b;border-radius:50%;transform:rotateX(67deg);animation:orbitPulse 5s ease-in-out infinite}
+    .ring-one{width:390px;height:170px}.ring-two{width:500px;height:220px;animation-delay:-2.5s}
+    .store-cube{width:180px;height:138px;position:relative;transform-style:preserve-3d;transform:rotateX(-18deg) rotateY(-27deg);animation:cubeFloat 6s ease-in-out infinite;filter:drop-shadow(0 30px 22px #0007)}
+    .cube-front{position:absolute;inset:0;background:linear-gradient(145deg,#277cf5,#102d85);border:1px solid #9edfff99;border-radius:15px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;box-shadow:inset 0 1px #ffffff8a, inset 0 -18px 35px #061c6477;transform:translateZ(42px)}
+    .cube-front span{font-size:1.2rem;font-weight:800;letter-spacing:.14em}.cube-front strong{font-size:1.65rem;letter-spacing:.08em;text-shadow:0 4px 12px #001c67}.cube-front small{font-size:.48rem;letter-spacing:.18em;color:#a9e5ff;margin-top:5px}
+    .cube-top{position:absolute;left:0;right:0;height:84px;top:-42px;background:linear-gradient(135deg,#9ce9ff,#398dff);border:1px solid #c9f3ff;border-radius:12px;transform:rotateX(90deg) translateZ(0);display:grid;place-items:center;color:#0b347e;font-size:2rem;font-weight:900}
+    .cube-side{position:absolute;right:-42px;top:0;width:84px;height:100%;background:linear-gradient(160deg,#164bb6,#071b59);border:1px solid #77bfff88;border-radius:12px;transform:rotateY(90deg);display:grid;place-items:center;color:#a8e7ff;font-size:2rem}
+    .float-chip{position:absolute;padding:.55rem .85rem;border:1px solid #a5dfff55;border-radius:12px;background:#0c2b5bd9;color:#dff5ff;font-size:.78rem;font-weight:700;box-shadow:0 12px 30px #0004;backdrop-filter:blur(10px);animation:chipFloat 5s ease-in-out infinite}
+    .chip-one{left:4%;top:28%}.chip-two{right:3%;top:22%;animation-delay:-1.8s}.chip-three{right:12%;bottom:4%;animation-delay:-3s}
+    @keyframes cubeFloat{0%,100%{transform:translateY(0) rotateX(-18deg) rotateY(-27deg)}50%{transform:translateY(-13px) rotateX(-12deg) rotateY(-15deg)}}
+    @keyframes chipFloat{0%,100%{translate:0 0}50%{translate:0 -10px}}
+    @keyframes orbitPulse{0%,100%{opacity:.35;scale:.96}50%{opacity:.8;scale:1.04}}
+    .section{max-width:1200px;padding:5rem 1.5rem}
+    .section-header h2{font-size:clamp(1.7rem,3vw,2.5rem);letter-spacing:-.04em;color:#0b1c3c}
+    .section-header p{color:#62718e}
+    .feature-card,.step,.auth-card,.dash-card{border:1px solid #dce8ff;background:linear-gradient(145deg,#fff,#f7faff);border-radius:22px;box-shadow:0 12px 35px #173b7610;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+    .feature-card{padding:1.8rem;transform-style:preserve-3d}
+    .feature-card:hover,.step:hover{transform:translateY(-8px) rotateX(2deg);box-shadow:0 24px 55px #174d9e20;border-color:#9bc5ff}
+    .feature-icon{width:54px;height:54px;border-radius:16px;background:linear-gradient(145deg,#dff4ff,#c8dcff);color:#1453ba;box-shadow:inset 0 1px #fff,0 8px 18px #2d75c526;font-size:0;position:relative}
+    .feature-icon:after{content:"✦";font-size:1.55rem;font-weight:900}
+    .step{box-shadow:0 10px 28px #173b760c}
+    #como-funciona{background:radial-gradient(ellipse at top,#e5f2ff,#f5f8ff 65%)!important}
+    .step-number{box-shadow:0 8px 18px #2369db45}
+    .pricing{position:relative;overflow:hidden;background:radial-gradient(circle at 80% 0%,#2b75db,#102d72 48%,#071630);border:1px solid #8acaff66;box-shadow:0 28px 65px #0b2e7140;border-radius:28px;padding:3rem 1.8rem}
+    .pricing:before{content:"";position:absolute;width:260px;height:260px;border:1px solid #b7e9ff33;border-radius:50%;right:-90px;top:-140px;box-shadow:0 0 0 25px #b7e9ff09,0 0 0 55px #b7e9ff08}
+    .price-tag{font-size:clamp(2.8rem,6vw,4rem);text-shadow:0 6px 25px #0004}
+    footer{background:#06132b;padding:2.5rem 1.5rem;border-top:1px solid #1d4d8b}
+    .auth-screen,.dashboard-screen{background:radial-gradient(ellipse at 50% 0%,#e2efff,#f5f8ff 65%)}
+    .auth-card,.dash-card{box-shadow:0 25px 70px #173b7620;padding:2.2rem}
+    .auth-card h2,.dash-card h2{letter-spacing:-.04em}
+    .form-group input{border-radius:13px;background:#fbfdff}
+    .store-box{background:linear-gradient(145deg,#e8f5ff,#e6edff);border-color:#c2dcff;border-radius:17px}
+    .status-badge{padding:.38rem .75rem}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+    .reveal.is-visible{opacity:1;transform:none}
+    @media(max-width:640px){.nav{padding:.7rem 1rem}.brand-mark{width:39px;height:39px}.logo{font-size:.92rem}.hero{min-height:630px;padding:2.2rem 1rem 3rem}.hero-orbit{height:205px;transform:scale(.82);margin:-.1rem auto -.1rem}.ring-two{width:420px}.chip-one{left:-1%;top:25%}.chip-two{right:-1%;top:17%}.chip-three{right:0;bottom:0}.hero h1{font-size:clamp(2.15rem,10vw,3.1rem)}.section{padding:3.5rem 1.1rem}.feature-card{padding:1.4rem}.auth-card,.dash-card{padding:1.5rem}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav">
+      <a href="#" class="logo" onclick="showLanding(); return false;">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" role="img"><defs><linearGradient id="brandA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8be7ff"/><stop offset="1" stop-color="#2875ff"/></linearGradient><linearGradient id="brandB" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4c9dff"/><stop offset="1" stop-color="#1736a8"/></linearGradient></defs><path d="M32 3 57 17v29L32 61 7 46V17Z" fill="#07152f"/><path d="m32 8 20 11v24L32 55 12 43V19Z" fill="url(#brandB)"/><path d="m32 8 20 11-20 12L12 19Z" fill="url(#brandA)"/><path d="M32 31 52 19v24L32 55Z" fill="#1554c8"/><path d="M12 19 32 31v24L12 43Z" fill="#0d2e80"/><path d="M22 20h21v5H28v5h12v5H28v6h15v5H22Z" fill="#fff"/></svg></span><span class="brand-word">ESFONT <b>STORE</b></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <button class="btn btn-outline" onclick="showAuth('login')">Entrar</button>
+        <button class="btn btn-primary" onclick="showAuth('register')">Criar loja</button>
+      </div>
+      <div class="nav-links hidden" id="navLogged">
+        <button class="btn btn-ghost" id="btnUserEmail"></button>
+        <button class="btn btn-outline" onclick="logout()">Sair</button>
+      </div>
+    </nav>
+  </header>
+
+  <div id="landingScreen">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-orbit" aria-hidden="true"><div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div><div class="store-cube"><div class="cube-top">ES</div><div class="cube-front"><span>ESFONT</span><strong>STORE</strong><small>SELL • GROW • SUCCEED</small></div><div class="cube-side">✦</div></div><div class="float-chip chip-one">✦ Loja online</div><div class="float-chip chip-two">↗ Mais vendas</div><div class="float-chip chip-three">◇ Seu negócio</div></div>
+        <div class="badge">Marketplace de lojas online</div>
+        <h1>Crie sua loja e comece a vender com a <span>ESFONT STORE</span></h1>
+        <p>
+          Integre sua loja, conecte o Mercado Pago e gerencie tudo em um painel simples.
+          Ative em minutos e libere sua loja pagando pelo nosso checkout.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" onclick="showAuth('register')">Começar agora</button>
+          <button class="btn btn-outline btn-lg" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">Ver como funciona</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="recursos">
+      <div class="section-header">
+        <h2>Tudo que você precisa para vender</h2>
+        <p>Uma plataforma completa para lojistas que querem simplicidade e controle.</p>
+      </div>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">loja</div>
+          <h3>Sua loja pronta</h3>
+          <p>Crie e personalize sua loja em poucos minutos. Produtos, pedidos e configurações no mesmo lugar.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">pag</div>
+          <h3>Mercado Pago integrado</h3>
+          <p>Conecte sua própria conta Mercado Pago e receba os pagamentos diretamente.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">painel</div>
+          <h3>Painel completo</h3>
+          <p>Gerencie produtos, pedidos, clientes e finanças em um painel limpo e fácil de usar.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">lock</div>
+          <h3>Ativação segura</h3>
+          <p>Pague a taxa de ativação pelo nosso checkout e libere sua loja automaticamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona" style="background: var(--blue-50); max-width: 100%;">
+      <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="section-header">
+          <h2>Como funciona</h2>
+          <p>Do cadastro até a primeira venda em 4 passos simples.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Crie sua conta</h3>
+            <p>Cadastre-se com e-mail e senha. É rápido e gratuito.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Ative sua loja</h3>
+            <p>Pague a taxa de ativação pelo nosso checkout seguro.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Conecte o Mercado Pago</h3>
+            <p>Autorize sua conta e comece a receber pagamentos.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Venda</h3>
+            <p>Adicione produtos e compartilhe o link da sua loja.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="planos">
+      <div class="pricing">
+        <h2>Ative sua loja agora</h2>
+        <p>Pagamento único de ativação. Depois você gerencia tudo no seu painel.</p>
+        <div class="price-tag">R$ 49,90 <span>/ ativação</span></div>
+        <p style="margin-bottom: 1.4rem; font-size: 0.95rem;">Libera a loja por 30 dias • Renovação opcional</p>
+        <button class="btn btn-primary btn-lg" onclick="showAuth('register')">Ativar minha loja</button>
+      </div>
+    </section>
+
+    <footer>
+      <div class="logo">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" role="img"><defs><linearGradient id="brandA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8be7ff"/><stop offset="1" stop-color="#2875ff"/></linearGradient><linearGradient id="brandB" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4c9dff"/><stop offset="1" stop-color="#1736a8"/></linearGradient></defs><path d="M32 3 57 17v29L32 61 7 46V17Z" fill="#07152f"/><path d="m32 8 20 11v24L32 55 12 43V19Z" fill="url(#brandB)"/><path d="m32 8 20 11-20 12L12 19Z" fill="url(#brandA)"/><path d="M32 31 52 19v24L32 55Z" fill="#1554c8"/><path d="M12 19 32 31v24L12 43Z" fill="#0d2e80"/><path d="M22 20h21v5H28v5h12v5H28v6h15v5H22Z" fill="#fff"/></svg></span><span class="brand-word">ESFONT <b>STORE</b></span>
+      </div>
+      <p>© 2026 ESFONT STORE. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+
+  <div id="authScreen" class="auth-screen hidden">
+    <div class="auth-card">
+      <h2 id="authTitle">Entrar</h2>
+      <p class="subtitle" id="authSubtitle">Acesse sua conta ESFONT STORE</p>
+
+      <div id="authAlert" class="alert"></div>
+
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="nameGroup" style="display:none;">
+          <label for="name">Nome da loja</label>
+          <input type="text" id="name" placeholder="Ex: Minha Loja" autocomplete="organization" />
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="authSubmitBtn">Entrar</button>
+      </form>
+
+      <div class="auth-switch">
+        <span id="authSwitchText">Não tem conta?</span>
+        <button type="button" id="authSwitchBtn" onclick="toggleAuthMode()">Criar conta</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboardScreen" class="dashboard-screen hidden">
+    <div class="dash-card" style="max-width: 480px;">
+      <div class="dash-header">
+        <h2>Meu Painel</h2>
+      </div>
+      <p class="user-email" id="dashEmail"></p>
+
+      <div id="dashAlert" class="alert"></div>
+
+      <div id="noStoreBox" class="empty-state hidden">
+        <p>Você ainda não tem uma loja criada.</p>
+        <div class="form-group" style="text-align:left;">
+          <label for="storeName">Nome da sua loja</label>
+          <input type="text" id="storeName" placeholder="Ex: Loja do João" />
+        </div>
+        <button class="btn btn-primary btn-block" onclick="createStore()">Criar minha loja</button>
+      </div>
+
+      <div id="hasStoreBox" class="hidden">
+        <div class="store-box">
+          <h3 id="storeNameDisplay">—</h3>
+          <p style="font-size:0.9rem; color:var(--slate-600);">Slug: <strong id="storeSlugDisplay">—</strong></p>
+          <span class="status-badge" id="storeStatusBadge">—</span>
+        </div>
+
+        <div id="pendingActions">
+          <p style="font-size:0.92rem; color:var(--slate-600); margin-bottom:1rem; text-align:center;">
+            Sua loja está aguardando ativação. Pague a taxa para liberar.
+          </p>
+          <button id="pixPayBtn" class="btn btn-primary btn-block btn-lg" onclick="startPixPayment()">
+            Gerar Pix — R$ 49,90
+          </button>
+          <div id="pixPaymentBox" class="hidden" style="margin-top:1.25rem;padding:1rem;border:1px solid #cbd5e1;border-radius:16px;background:#fff;color:#0f172a;text-align:center">
+            <strong>Pagamento via Pix</strong>
+            <p id="pixStatusText" style="margin:.5rem 0;color:#475569">Escaneie o QR Code ou copie o código Pix.</p>
+            <img id="pixQrImage" alt="QR Code Pix" class="hidden" style="width:220px;max-width:100%;margin:1rem auto;border-radius:10px" />
+            <textarea id="pixCopyCode" readonly rows="4" style="width:100%;padding:.7rem;border:1px solid #cbd5e1;border-radius:10px;font-size:.8rem;word-break:break-all"></textarea>
+            <button class="btn btn-primary btn-block" style="margin-top:.6rem" onclick="copyPixCode()">Copiar código Pix</button>
+            <button class="btn btn-block" style="margin-top:.5rem;background:#e2e8f0;color:#0f172a" onclick="refreshStoreStatus()">Já paguei — verificar pagamento</button>
+          </div>
+        </div>
+
+        <div id="activeActions" class="hidden">
+          <p style="font-size:0.92rem; color:var(--slate-600); margin-bottom:1rem; text-align:center;">
+            Loja ativa! Em breve você poderá adicionar produtos e conectar o Mercado Pago.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kkwdsbtqcgvcgwjxrcxk.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_zpFEzM3BQcA7yVJ2arLLgA_sfV38Z8N';
+    // Troque pela URL pública do serviço criado no Render.
+    const ESFONT_API_URL = 'https://SEU-SERVICO.onrender.com';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function apiRequest(path, body) {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session?.access_token) throw new Error('Sua sessão expirou. Entre novamente.');
+      if (ESFONT_API_URL.includes('SEU-SERVICO')) throw new Error('Configure a URL do servidor Render no index.html antes de publicar.');
+      const response = await fetch(ESFONT_API_URL + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+        body: JSON.stringify(body || {})
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Falha ao comunicar com o servidor.');
+      return result;
+    }
+
+
+    let currentMode = 'login';
+    let currentUser = null;
+    let currentStore = null;
+
+    function showLanding() {
+      document.getElementById('landingScreen').classList.remove('hidden');
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('dashboardScreen').classList.add('hidden');
+    }
+
+    function showAuth(mode) {
+      currentMode = mode || 'login';
+      document.getElementById('landingScreen').classList.add('hidden');
+      document.getElementById('dashboardScreen').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+      updateAuthUI();
+      clearAlert('authAlert');
+    }
+
+    function showDashboard() {
+      document.getElementById('landingScreen').classList.add('hidden');
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('dashboardScreen').classList.remove('hidden');
+      document.getElementById('dashEmail').textContent = currentUser?.email || '';
+      loadStore();
+    }
+
+    function updateAuthUI() {
+      const isRegister = currentMode === 'register';
+      document.getElementById('authTitle').textContent = isRegister ? 'Criar conta' : 'Entrar';
+      document.getElementById('authSubtitle').textContent = isRegister
+        ? 'Crie sua conta e comece sua loja'
+        : 'Acesse sua conta ESFONT STORE';
+      document.getElementById('nameGroup').style.display = isRegister ? 'block' : 'none';
+      document.getElementById('authSubmitBtn').textContent = isRegister ? 'Criar conta' : 'Entrar';
+      document.getElementById('authSwitchText').textContent = isRegister ? 'Já tem conta?' : 'Não tem conta?';
+      document.getElementById('authSwitchBtn').textContent = isRegister ? 'Entrar' : 'Criar conta';
+    }
+
+    function toggleAuthMode() {
+      currentMode = currentMode === 'login' ? 'register' : 'login';
+      updateAuthUI();
+      clearAlert('authAlert');
+    }
+
+    function showAlert(id, message, type) {
+      type = type || 'error';
+      const el = document.getElementById(id);
+      el.textContent = message;
+      el.className = 'alert show alert-' + type;
+    }
+
+    function clearAlert(id) {
+      const el = document.getElementById(id);
+      el.className = 'alert';
+      el.textContent = '';
+    }
+
+    async function handleAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value.trim();
+      const btn = document.getElementById('authSubmitBtn');
+
+      btn.disabled = true;
+      btn.textContent = 'Aguarde...';
+      clearAlert('authAlert');
+
+      try {
+        if (currentMode === 'register') {
+          if (!name) {
+            showAlert('authAlert', 'Digite o nome da sua loja.');
+            return;
+          }
+
+          const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { store_name: name } }
+          });
+
+          if (error) throw error;
+
+          if (data.user) {
+            currentUser = data.user;
+            await createStoreAfterRegister(name);
+            updateNav(true);
+            showDashboard();
+          } else {
+            showAlert('authAlert', 'Conta criada! Verifique seu e-mail se necessário e faça login.', 'success');
+            currentMode = 'login';
+            updateAuthUI();
+          }
+        } else {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+          if (error) throw error;
+          currentUser = data.user;
+          updateNav(true);
+          showDashboard();
+        }
+      } catch (err) {
+        showAlert('authAlert', err.message || 'Erro ao autenticar. Tente novamente.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = currentMode === 'register' ? 'Criar conta' : 'Entrar';
+      }
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+      currentUser = null;
+      currentStore = null;
+      updateNav(false);
+      showLanding();
+    }
+
+    function updateNav(loggedIn) {
+      document.getElementById('navLinks').classList.toggle('hidden', loggedIn);
+      document.getElementById('navLogged').classList.toggle('hidden', !loggedIn);
+      if (loggedIn && currentUser) {
+        document.getElementById('btnUserEmail').textContent = currentUser.email;
+      }
+    }
+
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 40);
+    }
+
+    async function createStoreAfterRegister(name) {
+      const slug = slugify(name) + '-' + Math.random().toString(36).substring(2, 6);
+      const { data, error } = await supabaseClient
+        .from('stores')
+        .insert({
+          user_id: currentUser.id,
+          name: name,
+          slug: slug,
+          status: 'PENDING_PAYMENT'
+        })
+        .select()
+        .single();
+
+      if (!error) currentStore = data;
+    }
+
+    async function createStore() {
+      const name = document.getElementById('storeName').value.trim();
+      if (!name) {
+        showAlert('dashAlert', 'Digite o nome da loja.');
+        return;
+      }
+
+      clearAlert('dashAlert');
+      const slug = slugify(name) + '-' + Math.random().toString(36).substring(2, 6);
+
+      const { data, error } = await supabaseClient
+        .from('stores')
+        .insert({
+          user_id: currentUser.id,
+          name: name,
+          slug: slug,
+          status: 'PENDING_PAYMENT'
+        })
+        .select()
+        .single();
+
+      if (error) {
+        showAlert('dashAlert', error.message || 'Erro ao criar loja.');
+        return;
+      }
+
+      currentStore = data;
+      renderStore();
+    }
+
+    async function loadStore() {
+      const { data, error } = await supabaseClient
+        .from('stores')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        document.getElementById('noStoreBox').classList.remove('hidden');
+        document.getElementById('hasStoreBox').classList.add('hidden');
+        return;
+      }
+
+      currentStore = data;
+      if (currentStore) {
+        try {
+          const status = await apiRequest('/api/store-status', { store_id: currentStore.id });
+          if (status?.store) currentStore = status.store;
+        } catch (apiError) { console.warn('Não foi possível atualizar o status pelo servidor:', apiError); }
+      }
+      renderStore();
+    }
+
+    async function startPixPayment() {
+      const btn = document.getElementById('pixPayBtn');
+      const box = document.getElementById('pixPaymentBox');
+      btn.disabled = true;
+      btn.textContent = 'Preparando Pix...';
+      box.classList.add('hidden');
+      try {
+        const data = await apiRequest('/api/create-pix', { store_id: currentStore.id });
+        if (data?.active) {
+          await refreshStoreStatus();
+          alert(data.message || 'Loja ativada!');
+          return;
+        }
+        if (!data?.qr_code) throw new Error(data?.error || 'Não foi possível gerar o Pix.');
+        document.getElementById('pixCopyCode').value = data.qr_code;
+        const qr = document.getElementById('pixQrImage');
+        if (data.qr_code_base64) {
+          qr.src = 'data:image/png;base64,' + data.qr_code_base64;
+          qr.classList.remove('hidden');
+        } else qr.classList.add('hidden');
+        document.getElementById('pixStatusText').textContent = 'Pix de R$ 49,90 gerado. Após o pagamento, a confirmação é automática.';
+        box.classList.remove('hidden');
+      } catch (err) {
+        alert(err.message || 'Erro ao gerar Pix. Tente novamente.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Gerar Pix — R$ 49,90';
+      }
+    }
+
+    async function copyPixCode() {
+      const value = document.getElementById('pixCopyCode').value;
+      if (!value) return;
+      try { await navigator.clipboard.writeText(value); alert('Código Pix copiado!'); }
+      catch (_) { document.getElementById('pixCopyCode').select(); document.execCommand('copy'); alert('Código Pix copiado!'); }
+    }
+
+    async function refreshStoreStatus() {
+      try {
+        const result = await apiRequest('/api/store-status', { store_id: currentStore.id });
+        currentStore = result.store;
+      } catch (error) { alert(error.message || 'Não foi possível consultar sua loja.'); return; }
+      renderStore();
+      if (currentStore.status === 'ACTIVE') alert('Pagamento confirmado! Sua loja está ativa.');
+      else alert('Ainda não recebemos a confirmação. Se você acabou de pagar, aguarde alguns instantes e tente novamente.');
+    }
+
+    function renderStore() {
+      if (!currentStore) {
+        document.getElementById('noStoreBox').classList.remove('hidden');
+        document.getElementById('hasStoreBox').classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('noStoreBox').classList.add('hidden');
+      document.getElementById('hasStoreBox').classList.remove('hidden');
+
+      document.getElementById('storeNameDisplay').textContent = currentStore.name;
+      document.getElementById('storeSlugDisplay').textContent = currentStore.slug;
+
+      const badge = document.getElementById('storeStatusBadge');
+      if (currentStore.status === 'ACTIVE') {
+        badge.textContent = 'Ativa';
+        badge.className = 'status-badge status-active';
+        document.getElementById('pendingActions').classList.add('hidden');
+        document.getElementById('activeActions').classList.remove('hidden');
+      } else {
+        badge.textContent = 'Aguardando pagamento';
+        badge.className = 'status-badge status-pending';
+        document.getElementById('pendingActions').classList.remove('hidden');
+        document.getElementById('activeActions').classList.add('hidden');
+      }
+    }
+
+    async function init() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && session.user) {
+        currentUser = session.user;
+        updateNav(true);
+        showDashboard();
+      } else {
+        updateNav(false);
+        showLanding();
+      }
+
+      supabaseClient.auth.onAuthStateChange(function(event, session) {
+        if (session && session.user) {
+          currentUser = session.user;
+          updateNav(true);
+        } else {
+          currentUser = null;
+          currentStore = null;
+          updateNav(false);
+        }
+      });
+    }
+
+    init();
+    // Efeitos visuais progressivos; não alteram autenticação nem dados.
+    document.addEventListener('DOMContentLoaded', function(){
+      const targets = document.querySelectorAll('.section-header,.feature-card,.step,.pricing,.auth-card,.dash-card');
+      targets.forEach(el => el.classList.add('reveal'));
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+        }), {threshold: 0.12});
+        targets.forEach(el => observer.observe(el));
+      } else { targets.forEach(el => el.classList.add('is-visible')); }
+    });
+
+  </script>
+</body>
+</html>
